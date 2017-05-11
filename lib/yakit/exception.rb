@@ -1,4 +1,4 @@
-module YakitSeller
+module Yakit
   
   class StandardException < StandardError; end
   class Exception < StandardError 

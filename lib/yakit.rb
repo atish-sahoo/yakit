@@ -1,5 +1,6 @@
 require "yakit/version"
 require "yakit/exception"
+require "yakit/y_ship"
 require "yakit/y_rate"
 require "yakit/client"
 

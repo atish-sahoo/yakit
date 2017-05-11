@@ -2,6 +2,7 @@ module Yakit
 
 	class Client
 		include YRate
+		include YShip
 		
 		attr_reader :username
 		attr_reader :password
@@ -18,8 +19,8 @@ module Yakit
 		private
 
 			def raise_response_exception(response,message)
-				if e.response.code.present? && [400,403,404,500,503,599].include?(e.response.code)
-		          case e.response.code
+				if response.code.present? && [400,403,404,500,503,599].include?(response.code)
+		          case response.code
 		          	when 401
 		              raise Unauthorized.new(response), message
 		            when 400
@@ -40,6 +41,107 @@ module Yakit
 		        else
 		          raise OtherException.new(response), message
 		        end
+			end
+
+
+			def send_get_request(url)
+
+				begin
+					response =	RestClient::Request.execute(
+								method: :get, 
+								url: url,
+								user: @username,
+								password:@password,
+			                    headers: {:Version => 2, :content_type => 'application/json'}
+								)
+					response_data = JSON.parse(response.body)
+					return response_data
+
+				rescue RestClient::ExceptionWithResponse => e
+			        raise StandardException.new if e.response.blank?
+
+			        if e.response.code.present? && [401,400,403,404,500,503,599].include?(e.response.code)
+			        	raise_response_exception(e.response,e.message)
+			        else
+			          raise OtherException.new(e.response), e.message
+			        end
+			    end
+
+			end
+
+			def send_post_request(url,data={})
+
+				begin
+					response =	RestClient::Request.execute(
+								method: :post, 
+								url: url,
+								user: @username,
+								password:@password,
+			                    headers: {:Version => 2, :content_type => 'application/json'},
+			                    payload: data.to_json
+								)
+					response_data = JSON.parse(response.body)
+					return response_data
+
+				rescue RestClient::ExceptionWithResponse => e
+			        raise StandardException.new if e.response.blank?
+
+			        if e.response.code.present? && [401,400,403,404,500,503,599].include?(e.response.code)
+			        	raise_response_exception(e.response,e.message)
+			        else
+			          raise OtherException.new(e.response), e.message
+			        end
+			    end
+			end
+
+			def send_delete_request(url,data={})
+
+				begin
+					response =	RestClient::Request.execute(
+								method: :delete, 
+								url: url,
+								user: @username,
+								password:@password,
+			                    headers: {:Version => 2, :content_type => 'application/json'},
+			                    payload: data.to_json
+								)
+					response_data = JSON.parse(response.body)
+					return response_data
+
+				rescue RestClient::ExceptionWithResponse => e
+			        raise StandardException.new if e.response.blank?
+
+			        if e.response.code.present? && [401,400,403,404,500,503,599].include?(e.response.code)
+			        	raise_response_exception(e.response,e.message)
+			        else
+			          raise OtherException.new(e.response), e.message
+			        end
+			    end
+			end
+
+			def send_delete_request(url,data={})
+
+				begin
+					response =	RestClient::Request.execute(
+								method: :put, 
+								url: url,
+								user: @username,
+								password:@password,
+			                    headers: {:Version => 2, :content_type => 'application/json'},
+			                    payload: data.to_json
+								)
+					response_data = JSON.parse(response.body)
+					return response_data
+
+				rescue RestClient::ExceptionWithResponse => e
+			        raise StandardException.new if e.response.blank?
+
+			        if e.response.code.present? && [401,400,403,404,500,503,599].include?(e.response.code)
+			        	raise_response_exception(e.response,e.message)
+			        else
+			          raise OtherException.new(e.response), e.message
+			        end
+			    end
 			end
 
 	end
